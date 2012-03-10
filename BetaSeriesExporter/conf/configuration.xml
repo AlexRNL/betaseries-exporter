@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE properties SYSTEM "http://java.sun.com/dtd/properties.dtd">
+<properties>
+	<entry key="lookAndFeel">Nimbus</entry>
+	<entry key="icon">./data/icon.jpg</entry>
+	<entry key="outputFile">episodes.txt</entry>
+	<entry key="dateFormat">EEEE d MMMM yyyy à HH'h'mm</entry>
+</properties>
