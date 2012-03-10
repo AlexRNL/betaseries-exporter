@@ -195,8 +195,8 @@ public final class Launcher {
 			final String episodeName = QueryManager.getTextValue(currentEpisode, API.TITLE);
 			
 			// Building string
-			final String display = show + " #" + globalNumber + " " + episodeNumber + " - "
-					+ episodeName;
+			final String display = show + " #" + globalNumber + " " + episodeNumber +
+					(episodeName.isEmpty() ? "" : " - " + episodeName);
 			lg.fine(display);
 			nextEpisodes.add(display);
 		}
