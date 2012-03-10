@@ -1,6 +1,6 @@
 package com.alexrnl.betaseriesexporter;
 
-import java.awt.Container;
+import java.awt.Desktop;
 import java.awt.Dimension;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
@@ -11,6 +11,8 @@ import java.awt.event.KeyListener;
 import java.io.File;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.HashMap;
@@ -18,6 +20,7 @@ import java.util.Map;
 import java.util.logging.Logger;
 
 import javax.imageio.ImageIO;
+import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -122,8 +125,8 @@ public final class LoginForm {
 	 * @param icon the path to the icon
 	 */
 	private static void buildGui (final String icon) {
-		frame = new JFrame("Se connecter à BetaSeries");
-		final Container pane = new JPanel(new GridBagLayout());
+		frame = new JFrame("BetaSeries Exporter");
+		final JPanel pane = new JPanel(new GridBagLayout());
 
 		login = new JTextField(20);
 		password = new JPasswordField(20);
@@ -134,6 +137,22 @@ public final class LoginForm {
 			@Override
 			public void actionPerformed (final ActionEvent e) {
 				login();
+			}
+		});
+		final JButton authorButton = new JButton("Créé par AlexRNL");
+		authorButton.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed (final ActionEvent event) {
+				try {
+					Desktop.getDesktop().browse(new URI("https://www.betaseries.com/membre/AlexRNL"));
+				} catch (final IOException e) {
+					lg.warning("Browser could not be found, " + e.getMessage());
+				} catch (final URISyntaxException e) {
+					lg.warning("Could not parse url, " + e.getMessage());
+				} catch (final Exception e) {
+					lg.warning("Could not launch browser with the url, " + e.getMessage());
+				}
 			}
 		});
 
@@ -152,8 +171,11 @@ public final class LoginForm {
 		pane.add(password, c);
 		c.gridx = 0;
 		c.gridy = 2;
-		c.gridwidth = 2;
+		c.gridwidth = 1;
+		pane.add(authorButton, c);
+		c.gridx = 1;
 		pane.add(button, c);
+		pane.setBorder(BorderFactory.createTitledBorder("Connectez vous à votre compte sur BetaSeries"));
 
 		try {
 			frame.setIconImage(ImageIO.read(new File(icon)));
@@ -167,7 +189,7 @@ public final class LoginForm {
 		
 		frame.setContentPane(pane);
 		frame.validate();
-		frame.setMinimumSize(new Dimension(380, 120));
+		frame.setMinimumSize(new Dimension(400, 160));
 		frame.setVisible(true);
 		frame.setResizable(false);
 		frame.setLocationRelativeTo(null);
