@@ -40,7 +40,7 @@ public final class Launcher {
 
 	private static QueryManager	api					= null;
 	private static Properties	configuration		= null;
-	private static String		newLine				= System.lineSeparator();
+	private static String		newLine				= System.getProperty("line.separator");
 	
 	/**
 	 * Constructor #1.<br />
@@ -69,7 +69,7 @@ public final class Launcher {
 			setLookAndFeel();
 		
 		// Building the query manager
-		final Map<String, String> compulsoryParams = new HashMap<>();
+		final Map<String, String> compulsoryParams = new HashMap<String, String>();
 		compulsoryParams.put(API.KEY_PARAM, API.KEY);
 		compulsoryParams.put(API.USER_AGENT_PARAM, API.USER_AGENT);
 		api = new QueryManager(API.HOST, compulsoryParams);
@@ -84,7 +84,7 @@ public final class Launcher {
 		}
 
 		// The request for the episodes
-		final Map<String, String> params = new HashMap<>();
+		final Map<String, String> params = new HashMap<String, String>();
 		params.put(API.VIEW, API.NEXT);
 		params.put(API.TOKEN, token);
 		final Document doc = api.execute(API.MEMBER_EPISODES, params);
@@ -137,9 +137,17 @@ public final class Launcher {
 				try {
 					UIManager.setLookAndFeel(laf.getClassName());
 					lookAndFeelFound = true;
-				} catch (ClassNotFoundException | InstantiationException | IllegalAccessException
-						| UnsupportedLookAndFeelException e) {
-					lg.warning("Could not set the look and feel " + laf.getName());
+				} catch (final ClassNotFoundException e) {
+					lg.warning("Could not set the look and feel " + laf.getName() + ", class not found: " + e.getMessage());
+					lookAndFeelFound = false;
+				} catch (final InstantiationException e) {
+					lg.warning("Could not set the look and feel " + laf.getName() + ", instantiation failed: " + e.getMessage());
+					lookAndFeelFound = false;
+				} catch (final IllegalAccessException e) {
+					lg.warning("Could not set the look and feel " + laf.getName() + ", access to the class denied: " + e.getMessage());
+					lookAndFeelFound = false;
+				} catch (final UnsupportedLookAndFeelException e) {
+					lg.warning("Could not set the look and feel " + laf.getName() + ", look and feel not supported: " + e.getMessage());
 					lookAndFeelFound = false;
 				}
 			}
@@ -156,7 +164,7 @@ public final class Launcher {
 	 */
 	private static void logout (final String token) {
 		// Preparing the parameters for logging out
-		final Map<String, String> paramLogout = new HashMap<>();
+		final Map<String, String> paramLogout = new HashMap<String, String>();
 		paramLogout.put(API.TOKEN, token);
 	
 		final Document doc = api.execute(API.LOGOUT_PAGE, paramLogout);
@@ -170,7 +178,7 @@ public final class Launcher {
 	 * @return the list with the episodes information, nicely formatted.
 	 */
 	private static List<String> createListEpisodes (final Document doc) {
-		final List<String> nextEpisodes = new ArrayList<>();
+		final List<String> nextEpisodes = new ArrayList<String>();
 		final NodeList episodes = doc.getElementsByTagName(API.EPISODE);
 		
 		for (int currentEpisodeNb = 0; currentEpisodeNb < episodes.getLength(); ++currentEpisodeNb) {
@@ -228,7 +236,7 @@ public final class Launcher {
 			
 		} catch (final IOException e) {
 			lg.severe("Cannot write to file (" + e.getMessage() + ")");
-			JOptionPane.showMessageDialog(null, "Écriture dans le fichier " + fileName + "impossible." +
+			JOptionPane.showMessageDialog(null, "Écriture dans le fichier " + fileName + " impossible." +
 					newLine + "Cause : " + e.getMessage(), "Erreur d'écriture", JOptionPane.ERROR_MESSAGE);
 		} finally {
 			if (fos != null)
