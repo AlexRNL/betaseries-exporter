@@ -193,7 +193,7 @@ public class QueryManager {
 		final NodeList nodeList = element.getElementsByTagName(tagName);
 		if (nodeList != null && nodeList.getLength() > 0) {
 			final Element el = (Element) nodeList.item(0);
-			textVal = el.getFirstChild().getNodeValue();
+			textVal = el.getFirstChild() != null ? el.getFirstChild().getNodeValue() : "";
 		}
 		return textVal;
 	}
