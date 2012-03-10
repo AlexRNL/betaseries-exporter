@@ -157,8 +157,12 @@ public final class LoginForm {
 
 		try {
 			frame.setIconImage(ImageIO.read(new File(icon)));
-		} catch (final IOException | NullPointerException e) {
-			lg.warning("Error while loading icon (" + e.getMessage() + ")");
+		} catch (final IOException e) {
+			lg.warning("Error while loading icon, error while loading image (" + e.getMessage() + ")");
+		} catch (final IllegalArgumentException e) {
+			lg.warning("Error while loading icon, error while loading file (" + e.getMessage() + ")");
+		} catch (final NullPointerException e) {
+			lg.warning("Error while loading icon, cannot load 'null' image (" + e.getMessage() + ")");
 		}
 		
 		frame.setContentPane(pane);
@@ -171,6 +175,35 @@ public final class LoginForm {
 	}
 
 	/**
+	 * Login to the BetaSeries account
+	 */
+	private static void login () {
+		if (login == null || password == null ||
+				login.getText().isEmpty() || password.getPassword().length == 0)
+			return;
+		final Map<String, String> params = new HashMap<String, String>();
+		params.put(API.LOGIN, login.getText());
+		params.put(API.PASSWORD, getMD5(password.getPassword()));
+		final Document doc = api.execute(API.LOGIN_PAGE, params);
+	
+		if (doc == null || QueryManager.hasError(doc)) {
+			token = null;
+			lg.warning("Connection to account has failed: "
+					+ QueryManager.getTextValue(
+							(Element) doc.getElementsByTagName(API.ERRORS).item(0),
+							API.ERROR_CONTENT));
+			JOptionPane.showMessageDialog(frame,
+					"Échec de connection à BetaSeries, vérifiez vos identifiants.",
+					"Erreur de connection", JOptionPane.ERROR_MESSAGE);
+		}
+	
+		token = QueryManager.getTextValue((Element) doc.getFirstChild(), API.TOKEN);
+		synchronized (lg) {
+			lg.notify();
+		}
+	}
+
+	/**
 	 * Computes the MD5 of a string.
 	 * @param text the text to hash
 	 * @return the hash of the text
@@ -180,12 +213,14 @@ public final class LoginForm {
 			final StringBuffer buffer = new StringBuffer();
 			final MessageDigest msgDigest = MessageDigest.getInstance("MD5");
 			msgDigest.update(text.getBytes("UTF-8"));
+			
 			final byte[] digest = msgDigest.digest();
 			for (final byte element : digest) {
 				int value = element;
 				if (value < 0) {
 					value += 256;
 				}
+				// Add a zero in case of 'short' hash.
 				if (value <= 14) {
 					buffer.append("0" + Integer.toHexString(value));
 				} else {
@@ -193,8 +228,11 @@ public final class LoginForm {
 				}
 			}
 			return buffer.toString();
-		} catch (final NoSuchAlgorithmException | UnsupportedEncodingException e) {
-			lg.warning("Error while computing MD5 (" + e.getMessage() + ").");
+		} catch (final NoSuchAlgorithmException e) {
+			lg.warning("Error while computing MD5, no MD5 algorithm found (" + e.getMessage() + ").");
+			return null;
+		} catch (final UnsupportedEncodingException e) {
+			lg.warning("Error while computing MD5, encoding not supported (" + e.getMessage() + ").");
 			return null;
 		}
 	}
@@ -206,35 +244,6 @@ public final class LoginForm {
 	 */
 	private static String getMD5 (final char[] text) {
 		return getMD5(new String(text));
-	}
-
-	/**
-	 * Login to the BetaSeries account
-	 */
-	private static void login () {
-		if (login == null || password == null ||
-				login.getText().isEmpty() || password.getPassword().length == 0)
-			return;
-		final Map<String, String> params = new HashMap<>();
-		params.put(API.LOGIN, login.getText());
-		params.put(API.PASSWORD, getMD5(password.getPassword()));
-		final Document doc = api.execute(API.LOGIN_PAGE, params);
-
-		if (doc == null || QueryManager.hasError(doc)) {
-			token = null;
-			lg.warning("Connection to account has failed: "
-					+ QueryManager.getTextValue(
-							(Element) doc.getElementsByTagName(API.ERRORS).item(0),
-							API.ERROR_CONTENT));
-			JOptionPane.showMessageDialog(frame,
-					"Échec de connection à BetaSeries, vérifiez vos identifiants.",
-					"Erreur de connection", JOptionPane.ERROR_MESSAGE);
-		}
-
-		token = QueryManager.getTextValue((Element) doc.getFirstChild(), API.TOKEN);
-		synchronized (lg) {
-			lg.notify();
-		}
 	}
 
 }

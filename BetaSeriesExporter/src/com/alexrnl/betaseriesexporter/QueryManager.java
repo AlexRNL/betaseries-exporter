@@ -108,8 +108,15 @@ public class QueryManager {
 		Document doc = null;
 		try {
 			doc = DocumentBuilderFactory.newInstance().newDocumentBuilder().parse(url);
-		} catch (ParserConfigurationException | SAXException | IOException e) {
-			JOptionPane.showMessageDialog(null, e.getMessage(), "Erreur de communication", JOptionPane.ERROR_MESSAGE);
+		} catch (final ParserConfigurationException e) {
+			JOptionPane.showMessageDialog(null, "La connection à l'API a échoué.\nCause : " + e.getMessage(),
+					"Erreur de communication", JOptionPane.ERROR_MESSAGE);
+		} catch (final SAXException e) {
+			JOptionPane.showMessageDialog(null, "La connection à l'API a échoué.\nCause : " + e.getMessage(),
+					"Erreur de communication", JOptionPane.ERROR_MESSAGE);
+		} catch (final IOException e) {
+			JOptionPane.showMessageDialog(null, "La connection à l'API a échoué.\nCause : " + e.getMessage(),
+					"Erreur de communication", JOptionPane.ERROR_MESSAGE);
 		}
 		return doc;
 	}
