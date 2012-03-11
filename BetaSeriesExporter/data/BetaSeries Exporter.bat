@@ -1,1 +1,1 @@
-java -Djava.util.logging.config.file=./conf/loggingClient.properties -Xmx30m -jar "BetaSeries Exporter.jar"
+start javaw -Djava.util.logging.config.file=./conf/loggingClient.properties -Xmx30m -jar "BetaSeries Exporter.jar"

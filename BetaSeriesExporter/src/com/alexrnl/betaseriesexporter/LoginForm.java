@@ -1,5 +1,6 @@
 package com.alexrnl.betaseriesexporter;
 
+import java.awt.Cursor;
 import java.awt.Desktop;
 import java.awt.Dimension;
 import java.awt.GridBagConstraints;
@@ -8,6 +9,8 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 import java.io.File;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
@@ -139,11 +142,23 @@ public final class LoginForm {
 				login();
 			}
 		});
-		final JButton authorButton = new JButton("Créé par AlexRNL");
-		authorButton.addActionListener(new ActionListener() {
+		final JLabel author = new JLabel("Créé par AlexRNL");
+		author.addMouseListener(new MouseListener() {
 			
 			@Override
-			public void actionPerformed (final ActionEvent event) {
+			public void mouseReleased (final MouseEvent e) {}
+			
+			@Override
+			public void mousePressed (final MouseEvent e) {}
+			
+			@Override
+			public void mouseExited (final MouseEvent e) {}
+			
+			@Override
+			public void mouseEntered (final MouseEvent e) {}
+			
+			@Override
+			public void mouseClicked (final MouseEvent event) {
 				try {
 					Desktop.getDesktop().browse(new URI("https://www.betaseries.com/membre/AlexRNL"));
 				} catch (final IOException e) {
@@ -153,8 +168,10 @@ public final class LoginForm {
 				} catch (final Exception e) {
 					lg.warning("Could not launch browser with the url, " + e.getMessage());
 				}
+				
 			}
 		});
+		author.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
 
 		final GridBagConstraints c = new GridBagConstraints();
 		c.gridheight = 1;
@@ -172,7 +189,7 @@ public final class LoginForm {
 		c.gridx = 0;
 		c.gridy = 2;
 		c.gridwidth = 1;
-		pane.add(authorButton, c);
+		pane.add(author, c);
 		c.gridx = 1;
 		pane.add(button, c);
 		pane.setBorder(BorderFactory.createTitledBorder("Connectez vous à votre compte sur BetaSeries"));
@@ -189,7 +206,7 @@ public final class LoginForm {
 		
 		frame.setContentPane(pane);
 		frame.validate();
-		frame.setMinimumSize(new Dimension(400, 160));
+		frame.setMinimumSize(new Dimension(420, 180));
 		frame.setVisible(true);
 		frame.setResizable(false);
 		frame.setLocationRelativeTo(null);

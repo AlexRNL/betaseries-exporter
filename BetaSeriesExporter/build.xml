@@ -111,7 +111,6 @@
 	<target name="run" depends="jar" description="Run the jar file">
 		<java jar="${target.dir}/${ant.project.name}.jar" fork="true">
 			<classpath>
-				<path refid="classpath" />
 				<path location="${target.dir}/${ant.project.name}.jar" />
 			</classpath>
 		</java>
@@ -121,7 +120,7 @@
           target: archive              
          ================================= -->
 	<target name="archive" depends="jar" description="Gather and archive the executable and the required files.">
-		<zip destfile="${basedir}/${archive.name}">
+		<zip destfile="${basedir}/${archive.name}" compress="true">
 			<fileset dir="${target.dir}">
 				<include name="**/*" />
 			</fileset>
