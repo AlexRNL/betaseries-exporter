@@ -21,8 +21,11 @@
 	<property name="version" value="1.0" description="The version of the application" />
 	<property name="ant.build.javac.target" value="1.6" description="JVM target version of the build." />
 	<property name="ant.build.javac.source" value="1.6" description="Java version of the source of the build." />
-	<property name="rt.java.location" value="${env.ProgramFiles}\java\jdk1.6.0_31\jre\lib\rt.jar"/>
+	<property name="java.location" value="${env.ProgramFiles}\java\jdk1.6.0_31\" />
 
+    <path id="classpath">
+		<fileset dir="${java.location}" includes="**/*.jar" />
+	</path>
 
 
 	<!-- ###### TARGETS ###### -->
@@ -64,7 +67,7 @@
 	          target: build              
 	         ================================= -->
 	<target name="build" depends="init" description="Compile the source files.">
-		<javac srcdir="${src.dir}" destdir="${bin.dir}" includeantruntime="false" bootclasspath="${rt.java.location}" />
+		<javac srcdir="${src.dir}" destdir="${bin.dir}" includeantruntime="false" bootclasspath="${java.location}" />
 	</target>
 
 	<!-- ================================= 
