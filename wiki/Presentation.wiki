@@ -1,0 +1,34 @@
+#summary Présentation de l'application.
+#labels Featured,Phase-Deploy
+
+=[https://www.betaseries.com BetaSeries] Exporter=
+
+Cette petite application vous permet d'exporter la liste de vos épisodes à voir et permet de garder le fil lorsque vous n'avez plus accès à Internet.
+
+==Fonctionnalités==
+
+ * Exporte votre liste d'épisode à voir dans un fichier texte.
+
+==Installation==
+
+ # Téléchargez ce [http://betaseries-exporter.googlecode.com/files/BSExporter.zip fichier].
+ # Décompressez l'archive.
+
+==Utilisation==
+
+Pour lancer l'application, 
+
+==Prochainement==
+L'application reste très simple à ce jour. En fonction des retour des utilisateurs, 
+ * Proposer de retenir le login/password.
+ * Proposer d'autres format d'export (html, csv, xml).
+
+==Rapporter un bug==
+
+Il est possible que la fenêtre ne se charge pas correctement rendant les champs de textes
+
+Remplissez un ticket sur le [http://code.google.com/p/betaseries-exporter/issues/list bugtracker] de l'extension.
+
+==Auteur==
+
+Alex _[http://www.betaseries.com/membres/AlexRNL AlexRNL]_ Barféty.
