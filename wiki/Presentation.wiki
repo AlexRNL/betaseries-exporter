@@ -16,7 +16,7 @@ Cette petite application vous permet d'exporter la liste de vos épisodes à voi
 
 ==Utilisation==
 
-Pour lancer l'application, 
+Pour lancer l'application, utilisez le fichier `BetaSeries Exporter.bat`. L'application ne dispose pas (encore) de lanceur pour linux (prévu très prochainement).
 
 ==Prochainement==
 L'application reste très simple à ce jour. En fonction des retour des utilisateurs, 
@@ -25,7 +25,7 @@ L'application reste très simple à ce jour. En fonction des retour des utilisat
 
 ==Rapporter un bug==
 
-Il est possible que la fenêtre ne se charge pas correctement rendant les champs de textes
+Il est possible que la fenêtre ne se charge pas correctement rendant les champs de textes trop petits (mais néanmoins utilisables). Pour résoudre ce problème, augmenter la taille de la fenêtre dans le fichier de configuration (`conf/configuration.xml`) et ajustez les valeurs de `loginFormWidth` et `loginWindowHeight`.
 
 Remplissez un ticket sur le [http://code.google.com/p/betaseries-exporter/issues/list bugtracker] de l'extension.
 
