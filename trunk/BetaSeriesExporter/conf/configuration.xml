@@ -3,6 +3,8 @@
 <properties>
 	<entry key="lookAndFeel">Nimbus</entry>
 	<entry key="icon">./data/icon.jpg</entry>
+	<entry key="loginWindowWidth">420</entry>
+	<entry key="loginWindowHeight">180</entry>
 	<entry key="outputFile">episodes.txt</entry>
 	<entry key="dateFormat">EEEE d MMMM yyyy à HH'h'mm</entry>
 </properties>

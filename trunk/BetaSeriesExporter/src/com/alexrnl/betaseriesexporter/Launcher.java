@@ -50,6 +50,18 @@ public final class Launcher {
 	}
 	
 	/**
+	 * Get the value of the property specified in the configuration file.
+	 * @param property the name of the property to retrieve.
+	 * @return the value of the property.
+	 */
+	public static String getProperty (String property) {
+		if (configuration == null || configuration.isEmpty()) {
+			return null;
+		}
+		return configuration.getProperty(property);
+	}
+	
+	/**
 	 * Launcher of the application.
 	 * @param args the arguments from the command line.
 	 */
@@ -75,7 +87,7 @@ public final class Launcher {
 		api = new QueryManager(API.HOST, compulsoryParams);
 
 		// Retrieve the token for the user
-		final String token = LoginForm.getToken(api, configuration.getProperty("icon"));
+		final String token = LoginForm.getToken(api);
 		if (token == null || token.isEmpty()) {
 			JOptionPane.showMessageDialog(null,
 					"Vous devez être connecté à BetaSeries pour utiliser" + "cette application",

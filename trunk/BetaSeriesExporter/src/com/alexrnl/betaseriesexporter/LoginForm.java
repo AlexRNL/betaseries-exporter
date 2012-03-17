@@ -89,16 +89,15 @@ public final class LoginForm {
 	/**
 	 * Build and show a login form
 	 * @param apiQM the reference to the object managing the queries to the api.
-	 * @param icon the path icon of the window.
 	 * @return the token matching the user's account
 	 */
-	public static String getToken (final QueryManager apiQM, final String icon) {
+	public static String getToken (final QueryManager apiQM) {
 		LoginForm.api = apiQM;
 		token = null;
 		SwingUtilities.invokeLater(new Runnable() {
 			@Override
 			public void run () {
-				buildGui(icon);
+				buildGui();
 			}
 		});
 
@@ -125,9 +124,8 @@ public final class LoginForm {
 
 	/**
 	 * Build the simple form to login to BetaSeries
-	 * @param icon the path to the icon
 	 */
-	private static void buildGui (final String icon) {
+	private static void buildGui () {
 		frame = new JFrame("BetaSeries Exporter");
 		final JPanel pane = new JPanel(new GridBagLayout());
 
@@ -195,7 +193,7 @@ public final class LoginForm {
 		pane.setBorder(BorderFactory.createTitledBorder("Connectez vous à votre compte sur BetaSeries"));
 
 		try {
-			frame.setIconImage(ImageIO.read(new File(icon)));
+			frame.setIconImage(ImageIO.read(new File(Launcher.getProperty("icon"))));
 		} catch (final IOException e) {
 			lg.warning("Error while loading icon, error while loading image (" + e.getMessage() + ")");
 		} catch (final IllegalArgumentException e) {
@@ -204,9 +202,19 @@ public final class LoginForm {
 			lg.warning("Error while loading icon, cannot load 'null' image (" + e.getMessage() + ")");
 		}
 		
+		int width = 420;
+		int height = 180;
+		
+		try {
+			width = Integer.parseInt(Launcher.getProperty("loginWindowWidth"));
+			height = Integer.parseInt(Launcher.getProperty("loginWindowHeight"));
+		} catch (NumberFormatException e) {
+			lg.warning("Could not parse width or height value from the configuration file (" + e.getMessage() + ").");
+		}
+		
 		frame.setContentPane(pane);
 		frame.validate();
-		frame.setMinimumSize(new Dimension(420, 180));
+		frame.setMinimumSize(new Dimension(width, height));
 		frame.setVisible(true);
 		frame.setResizable(false);
 		frame.setLocationRelativeTo(null);
