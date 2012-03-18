@@ -20,6 +20,7 @@ import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import javax.imageio.ImageIO;
@@ -58,8 +59,9 @@ public final class LoginForm {
 		 */
 		@Override
 		public void keyPressed (final KeyEvent e) {
-			if (e.getKeyCode() == KeyEvent.VK_ENTER && button != null)
+			if (e.getKeyCode() == KeyEvent.VK_ENTER && button != null) {
 				button.doClick();
+			}
 		}
 
 		/* (non-Javadoc)
@@ -69,8 +71,12 @@ public final class LoginForm {
 		public void keyReleased (final KeyEvent e) {}
 	}
 
-	private static Logger			lg	= Logger.getLogger(LoginForm.class.getName());
+	private static Logger			lg				= Logger.getLogger(LoginForm.class.getName());
 
+	private static final int		WAITING_TIME	= 200;
+	private static final int		DEFAULT_WIDTH	= 420;
+	private static final int		DEFAULT_HEIGHT	= 180;
+	
 	private static JFrame			frame;
 	private static JTextField		login;
 	private static JPasswordField	password;
@@ -102,16 +108,17 @@ public final class LoginForm {
 		});
 
 		// Waiting for user information
-		while (token == null)
+		while (token == null) {
 			synchronized (lg) {
 				try {
-					lg.wait(200);
+					lg.wait(WAITING_TIME);
 				} catch (final InterruptedException e) {
 					lg.warning("Error while waiting for connection information (" + e.getMessage()
 							+ ").");
 					return null;
 				}
 			}
+		}
 
 		SwingUtilities.invokeLater(new Runnable() {
 			@Override
@@ -202,8 +209,8 @@ public final class LoginForm {
 			lg.warning("Error while loading icon, cannot load 'null' image (" + e.getMessage() + ")");
 		}
 		
-		int width = 420;
-		int height = 180;
+		int width = DEFAULT_WIDTH;
+		int height = DEFAULT_HEIGHT;
 		
 		try {
 			width = Integer.parseInt(Launcher.getProperty("loginWindowWidth"));
@@ -226,8 +233,9 @@ public final class LoginForm {
 	 */
 	private static void login () {
 		if (login == null || password == null ||
-				login.getText().isEmpty() || password.getPassword().length == 0)
+				login.getText().isEmpty() || password.getPassword().length == 0) {
 			return;
+		}
 		final Map<String, String> params = new HashMap<String, String>();
 		params.put(API.LOGIN, login.getText());
 		params.put(API.PASSWORD, getMD5(password.getPassword()));
@@ -235,13 +243,19 @@ public final class LoginForm {
 	
 		if (doc == null || QueryManager.hasError(doc)) {
 			token = null;
-			lg.warning("Connection to account has failed: "
-					+ QueryManager.getTextValue(
-							(Element) doc.getElementsByTagName(API.ERRORS).item(0),
-							API.ERROR_CONTENT));
+			if (lg.isLoggable(Level.WARNING)) {
+				String error;
+				if (doc == null) {
+					error = "xml response was null";
+				} else {
+					error = QueryManager.getTextValue((Element) doc.getElementsByTagName(API.ERRORS).item(0), API.ERROR_CONTENT);
+				}
+				lg.warning("Connection to account has failed: " + error);
+			}
 			JOptionPane.showMessageDialog(frame,
 					"Échec de connection à BetaSeries, vérifiez vos identifiants.",
 					"Erreur de connection", JOptionPane.ERROR_MESSAGE);
+			return;
 		}
 	
 		token = QueryManager.getTextValue((Element) doc.getFirstChild(), API.TOKEN);
