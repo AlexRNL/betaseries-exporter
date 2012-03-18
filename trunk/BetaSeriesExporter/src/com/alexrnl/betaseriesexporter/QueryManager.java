@@ -140,9 +140,8 @@ public class QueryManager {
 		}
 		if (!parameters.isEmpty() && parameters.endsWith("&")) {
 			return parameters.substring(0, parameters.length() - 1);
-		} else {
-			return parameters;
 		}
+		return parameters;
 	}
 
 

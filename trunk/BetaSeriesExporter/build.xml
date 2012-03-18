@@ -67,7 +67,7 @@
 	          target: build              
 	         ================================= -->
 	<target name="build" depends="init" description="Compile the source files.">
-		<javac srcdir="${src.dir}" destdir="${bin.dir}" includeantruntime="false" bootclasspath="${java.location}" />
+		<javac srcdir="${src.dir}" destdir="${bin.dir}" includeantruntime="false" bootclasspath="classpath" />
 	</target>
 
 	<!-- ================================= 

@@ -77,8 +77,9 @@ public final class Launcher {
 					" n'a pas pu être chargé.", "Fichier de configuration", JOptionPane.ERROR_MESSAGE);
 		}
 		
-		if (!configuration.isEmpty())
+		if (!configuration.isEmpty()) {
 			setLookAndFeel();
+		}
 		
 		// Building the query manager
 		final Map<String, String> compulsoryParams = new HashMap<String, String>();
@@ -102,8 +103,13 @@ public final class Launcher {
 		final Document doc = api.execute(API.MEMBER_EPISODES, params);
 
 		if (doc == null || QueryManager.hasError(doc)) {
-			final String errorMessage = QueryManager.getTextValue((Element) doc.getElementsByTagName(API.ERRORS)
+			String errorMessage;
+			if (doc == null) {
+				errorMessage = "Null response";
+			} else  {
+				errorMessage = QueryManager.getTextValue((Element) doc.getElementsByTagName(API.ERRORS)
 					.item(0), API.ERROR_CONTENT);
+			}
 			JOptionPane.showMessageDialog(null, errorMessage, "Erreur de communication",
 					JOptionPane.ERROR_MESSAGE);
 			logout(token);
@@ -180,8 +186,9 @@ public final class Launcher {
 		paramLogout.put(API.TOKEN, token);
 	
 		final Document doc = api.execute(API.LOGOUT_PAGE, paramLogout);
-		if (QueryManager.hasError(doc))
+		if (QueryManager.hasError(doc)) {
 			lg.warning("Failed do destroy connection token properly.");
+		}
 	}
 
 	/**
@@ -197,8 +204,9 @@ public final class Launcher {
 			final Element currentEpisode = (Element) episodes.item(currentEpisodeNb);
 			// Checking if the node is a 'real episode'
 			if (currentEpisode == null || !currentEpisode.hasChildNodes()
-					|| currentEpisode.getFirstChild().getNextSibling() == null)
+					|| currentEpisode.getFirstChild().getNextSibling() == null) {
 				continue;
+			}
 			
 			// Retrieving values
 			final String show = QueryManager.getTextValue(currentEpisode, API.SHOW);
@@ -228,11 +236,13 @@ public final class Launcher {
 		
 		try {
 			fileName = configuration.getProperty("outputFile");
-			if (fileName == null)
+			if (fileName == null) {
 				fileName = JOptionPane.showInputDialog(null, "Fichier de configuration non chargé, veuillez spécifier le nom du fichier d'export :",
 						"Fichier d'export", JOptionPane.QUESTION_MESSAGE);
-			if (fileName == null)
+			}
+			if (fileName == null) {
 				return false;
+			}
 			fos = new FileOutputStream(new File(fileName));
 			channel = fos.getChannel();
 			final ByteBuffer buffer = ByteBuffer.allocate(content.length()*2);
@@ -251,12 +261,13 @@ public final class Launcher {
 			JOptionPane.showMessageDialog(null, "Écriture dans le fichier " + fileName + " impossible." +
 					newLine + "Cause : " + e.getMessage(), "Erreur d'écriture", JOptionPane.ERROR_MESSAGE);
 		} finally {
-			if (fos != null)
+			if (fos != null) {
 				try {
 					fos.close();
 				} catch (final IOException e) {
 					lg.warning("Cannot close file (" + e.getMessage() + ")");
 				}
+			}
 		}
 		return success;
 	}
