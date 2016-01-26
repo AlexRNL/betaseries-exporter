@@ -1,0 +1,18 @@
+# Eclipse files #
+.project
+.classpath
+.settings
+
+# IntelliJ files
+.idea
+*.iml
+
+# Compilation files #
+*.class
+target
+bin
+
+# Package files #
+*.jar
+*.war
+*.ear
